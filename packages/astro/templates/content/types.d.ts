@@ -49,7 +49,10 @@ declare module 'astro:content' {
 		collection: C,
 		filter?: LiveLoaderCollectionFilterType<C>,
 	): Promise<
-		import('astro').LiveDataCollectionResult<LiveLoaderDataType<C>, LiveLoaderErrorType<C>>
+		import('astro').LiveDataCollectionResult<
+			LiveLoaderDataType<C> & Record<string, any>,
+			LiveLoaderErrorType<C>
+		>
 	>;
 
 	export function getEntry<
@@ -74,7 +77,12 @@ declare module 'astro:content' {
 	export function getLiveEntry<C extends keyof LiveContentConfig['collections']>(
 		collection: C,
 		filter: string | LiveLoaderEntryFilterType<C>,
-	): Promise<import('astro').LiveDataEntryResult<LiveLoaderDataType<C>, LiveLoaderErrorType<C>>>;
+	): Promise<
+		import('astro').LiveDataEntryResult<
+			LiveLoaderDataType<C> & Record<string, any>,
+			LiveLoaderErrorType<C>
+		>
+	>;
 
 	/** Resolve an array of entry references from the same collection */
 	export function getEntries<C extends keyof DataEntryMap>(
@@ -124,13 +132,13 @@ declare module 'astro:content' {
 	};
 
 	type ExtractLoaderTypes<T> = T extends import('astro/loaders').LiveLoader<
-		infer TData,
-		infer TEntryFilter,
-		infer TCollectionFilter,
-		infer TError
+		infer TData extends Record<string, any>,
+		infer TEntryFilter extends Record<string, any> | never,
+		infer TCollectionFilter extends Record<string, any> | never,
+		infer TError extends Error
 	>
 		? { data: TData; entryFilter: TEntryFilter; collectionFilter: TCollectionFilter; error: TError }
-		: { data: never; entryFilter: never; collectionFilter: never; error: never };
+		: { data: Record<string, any>; entryFilter: never; collectionFilter: never; error: Error };
 	type ExtractEntryFilterType<T> = ExtractLoaderTypes<T>['entryFilter'];
 	type ExtractCollectionFilterType<T> = ExtractLoaderTypes<T>['collectionFilter'];
 	type ExtractErrorType<T> = ExtractLoaderTypes<T>['error'];
