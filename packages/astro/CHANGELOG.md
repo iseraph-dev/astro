@@ -1,5 +1,19 @@
 # astro
 
+## 6.4.7
+
+### Patch Changes
+
+- [#16892](https://github.com/withastro/astro/pull/16892) [`8d753b0`](https://github.com/withastro/astro/commit/8d753b0b671971b78e7064fe38c2b0b518823627) Thanks [@astrobot-houston](https://github.com/astrobot-houston)! - Fixes custom elements in MDX having their children's `slot` attribute stripped by the JSX runtime
+
+  When custom elements (tags with hyphens like `<my-element>`) are used in MDX files, the `slot` HTML attribute on their children is now correctly preserved. Previously, the shared JSX runtime would treat `slot` as an Astro slot assignment and remove it from the output, breaking Shadow DOM named slot distribution for web components.
+
+- [#16957](https://github.com/withastro/astro/pull/16957) [`544ee76`](https://github.com/withastro/astro/commit/544ee763d7f7894e3b588daa14b09ef32a4d794a) Thanks [@thelazylamaGit](https://github.com/thelazylamaGit)! - Fixes stale inline CSS in server-rendered HTML after CSS file edits during dev
+
+  When editing a CSS file (`.css`, `.scss`, etc.) during development, the inline `<style>` tags in server-rendered HTML would retain old CSS content instead of updating. This caused a brief flash of old CSS (FOUC) on fresh page loads before Vite's client-side HMR corrected the styles.
+
+  The fix ensures that Astro's per-route dev CSS virtual modules are invalidated in both the SSR module graph and the module runner's evaluation cache when a style file changes, so the next page render picks up the fresh CSS.
+
 ## 6.4.6
 
 ### Patch Changes
